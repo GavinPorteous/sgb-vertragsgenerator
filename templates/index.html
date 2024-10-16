@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertragsgenerator</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+            text-align: center;  /* Center text */
+        }
+        .btn {
+            margin: 10px;  /* Add margin for spacing between buttons */
+        }
+        .custom-file-input {
+            display: none;  /* Hide default file input */
+        }
+        .custom-file-label {
+            display: inline-block;  /* Align file label with button */
+            cursor: pointer;  /* Show pointer on hover */
+            padding: 0.375rem 0.75rem;  /* Match button padding */
+            border: 1px solid #ced4da;  /* Match button border */
+            border-radius: 0.25rem;  /* Match button border radius */
+            background-color: #ffffff;  /* Match button background */
+        }
+        .title {
+            font-size: 2rem;  /* Increase font size */
+            margin-bottom: 20px;  /* Add space below the title */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Success or error message display -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="alert alert-{{ category }}" role="alert">
+          {% for category, message in messages %}
+            {{ message }}<br>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- New title -->
+    <h1 class="title">SGB Portfolio Vertragsgenerator</h1>
+    <p>Laden Sie Ihre Excel-Datei hoch, um Verträge einfach zu erstellen.</p>
+    
+    <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="custom-file-label" for="file">Wählen Sie eine Excel-Datei:</label>
+            <input type="file" class="custom-file-input" id="file" name="file" required>
+            <label class="btn btn-primary" for="file">
+                <i class="fas fa-upload"></i> Durchsuchen...
+            </label>
+        </div>
+        
+        <div class="form-group">
+            <a href="{{ url_for('download_zip') }}" class="btn btn-primary">  <!-- Updated here -->
+                <i class="fas fa-download"></i> Standard-Excel-Vorlage herunterladen
+            </a>
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">Verträge erstellen</button>
+        </div>
+    </form>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

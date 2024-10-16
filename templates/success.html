@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erfolg - Verträge erstellt</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+            text-align: center;  /* Center text */
+        }
+        .header {
+            margin-bottom: 30px;
+        }
+        .btn {
+            margin: 10px;  /* Add margin for spacing between buttons */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Verträge erfolgreich erstellt!</h1>
+        <p>Laden Sie Ihre erstellten Verträge unten herunter:</p>
+    </div>
+    
+    <ul class="list-group">
+        {% for pdf in pdf_files %}
+            <li class="list-group-item">
+                <a href="{{ url_for('download_pdf', filename=pdf) }}" class="btn btn-info">
+                    <i class="fas fa-file-pdf"></i> {{ pdf }} herunterladen
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+    
+    <div class="mt-3">
+        <a href="{{ url_for('download_zip', filename=zip_file) }}" class="btn btn-primary">
+            <i class="fas fa-file-archive"></i> Alle Verträge als Zip herunterladen
+        </a>
+    </div>
+    
+    <div class="mt-3">
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Zurück zur Startseite</a>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
