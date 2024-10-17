@@ -20,6 +20,15 @@
         .btn {
             margin: 10px;  /* Add margin for spacing between buttons */
         }
+        /* Custom button colors */
+        .btn-primary {
+            background-color: #142e51;
+            border-color: #142e51;
+        }
+        .btn-secondary {
+            background-color: #96a435;
+            border-color: #96a435;
+        }
     </style>
 </head>
 <body>
@@ -33,7 +42,7 @@
     <ul class="list-group">
         {% for pdf in pdf_files %}
             <li class="list-group-item">
-                <a href="{{ url_for('download_pdf', filename=pdf) }}" class="btn btn-info">
+                <a href="{{ url_for('download_pdf', filename=pdf) }}" class="btn btn-primary">
                     <i class="fas fa-file-pdf"></i> {{ pdf }} herunterladen
                 </a>
             </li>
