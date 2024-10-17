@@ -30,8 +30,9 @@ def get_pdf_fields(pdf_path):
                     fields[field_name[1:-1]] = None  # Remove brackets
     return fields
 
-# Function to generate PDFs from Excel
+# Function to create contracts from Excel
 def create_contracts_from_excel(excel_path, pdf_template_path):
+    create_output_directory()  # Ensure output directory exists
     df = pd.read_excel(excel_path)
     pdf_files = []  # To keep track of generated PDFs
 
@@ -88,15 +89,16 @@ def upload_file():
     file = request.files['file']
     if file.filename == '':
         return "No selected file", 400
+
     # Save the uploaded file
     excel_path = os.path.join(TEMPLATE_DIR, file.filename)
     file.save(excel_path)
-    
+
     # Generate PDFs from the uploaded Excel file
     create_output_directory()
     pdf_files = create_contracts_from_excel(excel_path, PDF_TEMPLATE_PATH)
     zip_filename = create_zip(pdf_files)
-    
+
     return render_template('success.html', pdf_files=pdf_files, zip_file=zip_filename)
 
 # Route for the index page
@@ -114,10 +116,9 @@ def download_pdf(filename):
 def download_zip():
     return send_file(os.path.join(OUTPUT_DIR, "contracts.zip"), as_attachment=True)
 
-# Additional route for "Hello, AWS Lambda!"
 @app.route('/hello')
 def hello():
-    return "Hello, AWS Lambda!"
+    return "Hello, AWS Lambda!"  # This can be removed if unnecessary
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)), debug=True)  # Allow external connections
