@@ -61,7 +61,13 @@
 
     <!-- New title -->
     <h1 class="title">SGB Portfolio Vertragsgenerator</h1>
-    <p>Laden Sie Ihre Excel-Datei hoch, um Verträge einfach zu erstellen.</p>
+    
+    <!-- Updated instructions -->
+    <p>
+      1. Excel-Template unten herunterladen<br>
+      2. Daten nach Format ins Excel-Template einfügen und .xlsx Datei hochladen<br>
+      3. Portfolio Vertragsdokumente generieren lassen.
+    </p>
     
     <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
         <div class="form-group">
@@ -73,7 +79,7 @@
         </div>
         
         <div class="form-group">
-            <a href="{{ url_for('download_template') }}" class="btn btn-primary">  <!-- Updated here -->
+            <a href="{{ url_for('download_template') }}" class="btn btn-primary">
                 <i class="fas fa-download"></i> Standard-Excel-Vorlage herunterladen
             </a>
         </div>
