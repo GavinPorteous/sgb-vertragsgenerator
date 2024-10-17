@@ -33,11 +33,21 @@
             font-size: 2rem;  /* Increase font size */
             margin-bottom: 20px;  /* Add space below the title */
         }
+        .logo {
+            max-width: 200px;  /* Set max width for the logo */
+            margin-bottom: 30px;  /* Add space below the logo */
+            cursor: pointer;  /* Show pointer on hover */
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <!-- Logo that redirects to index -->
+    <a href="{{ url_for('index') }}">
+        <img src="{{ url_for('static', filename='sgb_logo.jpg') }}" alt="Company Logo" class="logo">
+    </a>
+
     <!-- Success or error message display -->
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
