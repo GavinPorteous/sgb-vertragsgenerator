@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: pdf-generator
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn flask_app:app"
+    healthCheckPath: /
+    healthCheckInterval: 10
+    healthCheckTimeout: 5
+    healthCheckSuccessThreshold: 2
+    healthCheckFailureThreshold: 3

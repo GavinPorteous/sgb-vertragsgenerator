@@ -83,7 +83,6 @@ def create_zip(pdf_files):
 # Function to handle file uploads
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    # Logic to handle file upload (e.g., saving the uploaded file)
     if 'file' not in request.files:
         return "No file part", 400
     file = request.files['file']
@@ -114,6 +113,11 @@ def download_pdf(filename):
 @app.route('/download_zip', methods=['GET'])
 def download_zip():
     return send_file(os.path.join(OUTPUT_DIR, "contracts.zip"), as_attachment=True)
+
+# Additional route for "Hello, AWS Lambda!"
+@app.route('/hello')
+def hello():
+    return "Hello, AWS Lambda!"
 
 if __name__ == "__main__":
     app.run(debug=True)
