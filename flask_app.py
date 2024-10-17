@@ -116,6 +116,10 @@ def download_pdf(filename):
 def download_zip():
     return send_file(os.path.join(OUTPUT_DIR, "contracts.zip"), as_attachment=True)
 
+@app.route('/download_template', methods=['GET'])  # New route for the Excel template
+def download_template():
+    return send_file(EXCEL_TEMPLATE_PATH, as_attachment=True)
+
 @app.route('/hello')
 def hello():
     return "Hello, AWS Lambda!"  # This can be removed if unnecessary
