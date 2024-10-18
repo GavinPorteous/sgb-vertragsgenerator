@@ -50,6 +50,15 @@
         .hidden {
             display: none;
         }
+        .dropdown-container {
+            display: flex; /* Use flexbox for side by side alignment */
+            justify-content: center; /* Center the dropdowns */
+            gap: 15px; /* Space between dropdowns */
+        }
+        .form-control {
+            width: auto; /* Set width to auto for smaller dropdowns */
+            min-width: 150px; /* Set a minimum width */
+        }
     </style>
     <script>
         function toggleOptions() {
@@ -77,6 +86,13 @@
     <a href="{{ url_for('index') }}">
         <img src="{{ url_for('static', filename='sgb_logo.png') }}" alt="Company Logo" class="logo">
     </a>
+
+    <!-- Instructions under the logo -->
+    <div class="instructions">
+        <p>1. Excel-Template unten herunterladen</p>
+        <p>2. Daten nach Format ins Excel-Template einfügen und .xlsx Datei hochladen</p>
+        <p>3. Portfolio Vertragsdokumente generieren lassen.</p>
+    </div>
 
     <!-- Success or error message display -->
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -107,22 +123,40 @@
         </div>
 
         <div id="portfolio_options" class="hidden">
-            <div class="form-group">
-                <label for="laufzeit">Laufzeit (Monate):</label>
-                <select id="laufzeit" name="laufzeit" class="form-control">
-                    <option value="12">12 Monate</option>
-                    <option value="24">24 Monate</option>
-                </select>
+            <div class="dropdown-container">
+                <div class="form-group">
+                    <label for="laufzeit">Laufzeit (Monate):</label>
+                    <select id="laufzeit" name="laufzeit" class="form-control">
+                        <option value="12">12 Monate</option>
+                        <option value="24">24 Monate</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="energy_type">Energie Typ:</label>
+                    <select id="energy_type" name="energy_type" class="form-control">
+                        <option value="strom">Strom</option>
+                        <option value="gas">Gas</option>
+                    </select>
+                </div>
             </div>
         </div>
 
         <div id="spot_options" class="hidden">
-            <div class="form-group">
-                <label for="zaehlerart">Zählerart:</label>
-                <select id="zaehlerart" name="zaehlerart" class="form-control">
-                    <option value="strom">Strom</option>
-                    <option value="gas">Gas</option>
-                </select>
+            <div class="dropdown-container">
+                <div class="form-group">
+                    <label for="zaehlerart">Zählerart:</label>
+                    <select id="zaehlerart" name="zaehlerart" class="form-control">
+                        <option value="slp">SLP</option>
+                        <option value="rlm">RLM</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="energy_type">Energie Typ:</label>
+                    <select id="energy_type" name="energy_type" class="form-control">
+                        <option value="strom">Strom</option>
+                        <option value="gas">Gas</option>
+                    </select>
+                </div>
             </div>
         </div>
 

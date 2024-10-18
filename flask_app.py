@@ -30,7 +30,7 @@ def get_pdf_fields(pdf_path):
     return fields
 
 # Function to create contracts from Excel
-def create_contracts_from_excel(excel_path, tarif_type, pdf_template_folder):
+def create_contracts_from_excel(excel_path, tarif_type, energy_type, duration=None, meter_type=None):
     create_output_directory()  # Ensure output directory exists
     df = pd.read_excel(excel_path)
     pdf_files = []  # To keep track of generated PDFs
@@ -41,25 +41,22 @@ def create_contracts_from_excel(excel_path, tarif_type, pdf_template_folder):
             continue  # Skip empty rows
 
         # Extract contract-specific variables
-        gas_or_strom = row.get("Gas oder Strom", "").strip().lower()
-        running_time = row.get("Laufzeit", "").strip()
-        counter_type = row.get("Zählerart", "").strip().lower()
         company_name = row["###company###"]
 
         # Generate the correct template file name
         if tarif_type == "Portfolio-Tarif":
-            if running_time == "12":
-                template_name = f"portfolio_tarif_template_{gas_or_strom}_12.pdf"
-            elif running_time == "24":
-                template_name = f"portfolio_tarif_template_{gas_or_strom}_24.pdf"
+            if duration == "12":
+                template_name = f"portfolio_tarif_template_{energy_type}_12.pdf"
+            elif duration == "24":
+                template_name = f"portfolio_tarif_template_{energy_type}_24.pdf"
             else:
-                continue  # Invalid running time
+                continue  # Invalid duration
         elif tarif_type == "Spot-Tarif":
-            template_name = f"spot_tarif_template_{gas_or_strom}_{counter_type}.pdf"
+            template_name = f"spot_tarif_template_{energy_type}_{meter_type}.pdf"
         else:
             continue  # Invalid tarif type
 
-        pdf_template_path = os.path.join(pdf_template_folder, template_name)
+        pdf_template_path = os.path.join(TEMPLATE_DIR, "document_templates", template_name)
         filled_fields = get_pdf_fields(pdf_template_path)
         
         output_pdf_name = f"{company_name} Antrag {tarif_type}.pdf"
@@ -112,14 +109,16 @@ def upload_file():
     excel_path = os.path.join(TEMPLATE_DIR, file.filename)
     file.save(excel_path)
 
-    # Determine the tarif type from the Excel file (assuming it has a column)
-    df = pd.read_excel(excel_path)
-    tarif_type = df["Tarif"].iloc[0]  # Adjust based on your Excel column naming
+    # Determine the tarif type and other inputs from the form
+    tarif_type = request.form.get("tarif_type")
+    energy_type = request.form.get("energy_type")  # New input for energy type
+    duration = request.form.get("laufzeit") if tarif_type == "Portfolio-Tarif" else None  # Duration only for Portfolio
+    meter_type = request.form.get("zaehlerart") if tarif_type == "Spot-Tarif" else None  # Meter type only for Spot
 
     # Generate PDFs from the uploaded Excel file
     create_output_directory()
     pdf_template_folder = os.path.join(TEMPLATE_DIR, "document_templates")
-    pdf_files = create_contracts_from_excel(excel_path, tarif_type, pdf_template_folder)
+    pdf_files = create_contracts_from_excel(excel_path, tarif_type, energy_type, duration, meter_type)
     zip_filename = create_zip(pdf_files)
 
     return render_template('success.html', pdf_files=pdf_files, zip_file=zip_filename)
