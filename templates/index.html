@@ -31,7 +31,7 @@
         }
         .title {
             font-size: 2rem;  /* Increase font size */
-            margin-bottom: 20px;  /* Add space below the title */
+            margin: 20px 0;  /* Add space above and below the title */
         }
         .logo {
             max-width: 200px;  /* Set max width for the logo */
@@ -54,6 +54,7 @@
             display: flex; /* Use flexbox for side by side alignment */
             justify-content: center; /* Center the dropdowns */
             gap: 15px; /* Space between dropdowns */
+            margin: 20px 0; /* Add margin for spacing above and below */
         }
         .form-control {
             width: auto; /* Set width to auto for smaller dropdowns */
@@ -87,7 +88,10 @@
         <img src="{{ url_for('static', filename='sgb_logo.png') }}" alt="Company Logo" class="logo">
     </a>
 
-    <!-- Instructions under the logo -->
+    <!-- Title underneath the logo -->
+    <h1 class="title">SGB Vertragsgenerator</h1>
+
+    <!-- Instructions under the title -->
     <div class="instructions">
         <p>1. Excel-Template unten herunterladen</p>
         <p>2. Daten nach Format ins Excel-Template einfügen und .xlsx Datei hochladen</p>
@@ -104,8 +108,6 @@
         </div>
       {% endif %}
     {% endwith %}
-
-    <h1 class="title">Vertragsgenerator</h1>
 
     <form action="/" method="POST" enctype="multipart/form-data">
         <div class="form-group">
