@@ -13,30 +13,30 @@
         }
         .container {
             margin-top: 50px;
-            text-align: center;  /* Center text */
+            text-align: center;
         }
         .btn {
-            margin: 10px;  /* Add margin for spacing between buttons */
+            margin: 10px;
         }
         .custom-file-input {
-            display: none;  /* Hide default file input */
+            display: none;
         }
         .custom-file-label {
-            display: inline-block;  /* Align file label with button */
-            cursor: pointer;  /* Show pointer on hover */
-            padding: 0.375rem 0.75rem;  /* Match button padding */
-            border: 1px solid #ced4da;  /* Match button border */
-            border-radius: 0.25rem;  /* Match button border radius */
-            background-color: #ffffff;  /* Match button background */
+            display: inline-block;
+            cursor: pointer;
+            padding: 0.375rem 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            background-color: #ffffff;
         }
         .title {
-            font-size: 2rem;  /* Increase font size */
-            margin: 20px 0;  /* Add space above and below the title */
+            font-size: 2.5rem;
+            margin-bottom: 20px;
         }
         .logo {
-            max-width: 200px;  /* Set max width for the logo */
-            margin-bottom: 30px;  /* Add space below the logo */
-            cursor: pointer;  /* Show pointer on hover */
+            max-width: 200px;
+            margin-bottom: 30px;
+            cursor: pointer;
         }
         /* Custom button colors */
         .btn-primary {
@@ -47,38 +47,35 @@
             background-color: #96a435;
             border-color: #96a435;
         }
-        .hidden {
-            display: none;
+        .options-section {
+            margin-top: 20px;
         }
         .dropdown-container {
-            display: flex; /* Use flexbox for side by side alignment */
-            justify-content: center; /* Center the dropdowns */
-            gap: 15px; /* Space between dropdowns */
-            margin: 20px 0; /* Add margin for spacing above and below */
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
+        .dropdown-container select {
+            margin: 0 10px;
+        }
+        /* Center the instruction text */
+        .instruction-text {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: #333;
+            text-align: center;
+        }
+        /* Adjust dropdown width based on the height, 5 times taller */
         .form-control {
-            width: auto; /* Set width to auto for smaller dropdowns */
-            min-width: 150px; /* Set a minimum width */
+            height: 40px;
+            width: 200px; /* 5 times taller than its height */
+        }
+        /* Adjust margins for consistent spacing */
+        .form-group {
+            margin-bottom: 20px; /* Consistent spacing between dropdowns and buttons */
         }
     </style>
-    <script>
-        function toggleOptions() {
-            const tarifType = document.getElementById("tarif_type").value;
-            const portfolioOptions = document.getElementById("portfolio_options");
-            const spotOptions = document.getElementById("spot_options");
-
-            if (tarifType === "Portfolio-Tarif") {
-                portfolioOptions.classList.remove("hidden");
-                spotOptions.classList.add("hidden");
-            } else if (tarifType === "Spot-Tarif") {
-                spotOptions.classList.remove("hidden");
-                portfolioOptions.classList.add("hidden");
-            } else {
-                portfolioOptions.classList.add("hidden");
-                spotOptions.classList.add("hidden");
-            }
-        }
-    </script>
 </head>
 <body>
 
@@ -88,87 +85,104 @@
         <img src="{{ url_for('static', filename='sgb_logo.png') }}" alt="Company Logo" class="logo">
     </a>
 
-    <!-- Title underneath the logo -->
-    <h1 class="title">SGB Vertragsgenerator</h1>
-
-    <!-- Instructions under the title -->
-    <div class="instructions">
-        <p>1. Excel-Template unten herunterladen</p>
-        <p>2. Daten nach Format ins Excel-Template einfügen und .xlsx Datei hochladen</p>
-        <p>3. Vertragsdokumente generieren lassen.</p>
-    </div>
-
     <!-- Success or error message display -->
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <div class="alert alert-{{ category }}" role="alert">
-          {% for message in messages %}
+          {% for category, message in messages %}
             {{ message }}<br>
           {% endfor %}
         </div>
       {% endif %}
     {% endwith %}
 
-    <form action="/" method="POST" enctype="multipart/form-data">
+    <!-- New title -->
+    <h1 class="title">SGB Vertragsgenerator</h1>
+
+    <!-- Updated step-by-step instructions, centered -->
+    <div class="instruction-text">
+        <p>
+            1. Excel-Template unten herunterladen<br>
+            2. Daten nach Format ins Excel-Template einfügen und .xlsx Datei hochladen<br>
+            3. Vertragsdokumente generieren lassen
+        </p>
+    </div>
+
+    <!-- Download Excel Template Button -->
+    <div class="form-group">
+        <!-- Updated Button URL to the Flask route for downloading the template -->
+        <a href="{{ url_for('download_template') }}" class="btn btn-primary">
+            <i class="fas fa-file-excel"></i> Excel-Template herunterladen
+        </a>
+    </div>
+
+    <!-- Form for generating contracts -->
+    <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
         <div class="form-group">
-            <label for="file" class="btn btn-primary">Excel-Datei auswählen</label>
-            <input type="file" name="file" class="custom-file-input" id="file" accept=".xlsx" required>
+            <label class="custom-file-label" for="file">Wählen Sie eine Excel-Datei:</label>
+            <input type="file" class="custom-file-input" id="file" name="file" required>
+            <label class="btn btn-primary" for="file">
+                <i class="fas fa-upload"></i> Durchsuchen...
+            </label>
         </div>
 
-        <div class="form-group">
-            <label for="tarif_type">Tarif Typ wählen:</label>
-            <select id="tarif_type" name="tarif_type" class="form-control" onchange="toggleOptions()" required>
-                <option value="">Bitte wählen</option>
-                <option value="Portfolio-Tarif">Portfolio-Tarif</option>
-                <option value="Spot-Tarif">Spot-Tarif</option>
+        <!-- Dropdown options (side by side) -->
+        <div class="dropdown-container">
+            <select class="form-control" id="tarifType" name="tarifType" required>
+                <option value="">Tarif</option>
+                <option value="Spot">Spot-Tarif</option>
+                <option value="Portfolio">Portfolio-Tarif</option>
+            </select>
+
+            <select class="form-control" id="energyType" name="energyType" required>
+                <option value="">Strom/Gas</option>
+                <option value="strom">Strom</option>
+                <option value="gas">Gas</option>
             </select>
         </div>
 
-        <div id="portfolio_options" class="hidden">
-            <div class="dropdown-container">
-                <div class="form-group">
-                    <label for="laufzeit">Laufzeit (Monate):</label>
-                    <select id="laufzeit" name="laufzeit" class="form-control">
-                        <option value="12">12 Monate</option>
-                        <option value="24">24 Monate</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="energy_type">Energie Typ:</label>
-                    <select id="energy_type" name="energy_type" class="form-control">
-                        <option value="strom">Strom</option>
-                        <option value="gas">Gas</option>
-                    </select>
-                </div>
-            </div>
+        <!-- Additional options based on contract type -->
+        <div id="portfolioOptions" style="display: none;" class="options-section">
+            <label>Laufzeit des Vertrags:</label><br>
+            <input type="radio" name="contractDuration" value="12"> 12 Monate<br>
+            <input type="radio" name="contractDuration" value="24"> 24 Monate<br>
         </div>
 
-        <div id="spot_options" class="hidden">
-            <div class="dropdown-container">
-                <div class="form-group">
-                    <label for="zaehlerart">Zählerart:</label>
-                    <select id="zaehlerart" name="zaehlerart" class="form-control">
-                        <option value="slp">SLP</option>
-                        <option value="rlm">RLM</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="energy_type">Energie Typ:</label>
-                    <select id="energy_type" name="energy_type" class="form-control">
-                        <option value="strom">Strom</option>
-                        <option value="gas">Gas</option>
-                    </select>
-                </div>
-            </div>
+        <div id="spotOptions" style="display: none;" class="options-section">
+            <label>SLP oder RLM Zähler:</label><br>
+            <input type="radio" name="counterType" value="SLP"> SLP<br>
+            <input type="radio" name="counterType" value="RLM"> RLM<br>
         </div>
 
-        <button type="submit" class="btn btn-success">Vertrag erstellen</button>
-        <a href="{{ url_for('download_template') }}" class="btn btn-primary">Excel-Vorlage herunterladen</a>
+        <!-- Submit button, aligned consistently with spacing -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">Verträge erstellen</button>
+        </div>
     </form>
 </div>
 
+<!-- Script to dynamically show/hide fields based on contract type -->
+<script>
+    document.getElementById('tarifType').addEventListener('change', function () {
+        var portfolioOptions = document.getElementById('portfolioOptions');
+        var spotOptions = document.getElementById('spotOptions');
+        if (this.value === 'Portfolio') {
+            portfolioOptions.style.display = 'block';
+            spotOptions.style.display = 'none';
+        } else if (this.value === 'Spot') {
+            portfolioOptions.style.display = 'none';
+            spotOptions.style.display = 'block';
+        } else {
+            portfolioOptions.style.display = 'none';
+            spotOptions.style.display = 'none';
+        }
+    });
+</script>
+
+<!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>
