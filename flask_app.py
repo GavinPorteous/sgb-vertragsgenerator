@@ -94,12 +94,12 @@ def create_zip(pdf_files):
 def upload_file():
     if 'file' not in request.files:
         flash("No file part")
-        return redirect(request.url)
+        return redirect(url_for('index'))  # Redirect to index instead of repeating /upload
     
     file = request.files['file']
     if file.filename == '':
         flash("No selected file")
-        return redirect(request.url)
+        return redirect(url_for('index'))  # Redirect to index instead of repeating /upload
 
     # Retrieve form data
     tarif_type = request.form.get('tarifType')
@@ -114,14 +114,14 @@ def upload_file():
         template_name = f"portfolio_tarif_template_{energy_type}_{contract_duration}.pdf"
     else:
         flash("Invalid contract type selected.")
-        return redirect(request.url)
+        return redirect(url_for('index'))  # Redirect to index instead of repeating /upload
     
     pdf_template_path = os.path.join(TEMPLATE_DIR, template_name)
     
     # Check if the template exists
     if not os.path.exists(pdf_template_path):
         flash(f"Template not found: {template_name}")
-        return redirect(request.url)
+        return redirect(url_for('index'))
 
     # Save the uploaded file
     excel_path = os.path.join(TEMPLATE_DIR, file.filename)
@@ -134,11 +134,11 @@ def upload_file():
         pdf_files = create_contracts_from_excel(excel_path, pdf_template_path)
     except FileNotFoundError as e:
         flash(str(e))
-        return redirect(request.url)
+        return redirect(url_for('index'))
     
     if not pdf_files:
         flash("No contracts were generated.")
-        return redirect(request.url)
+        return redirect(url_for('index'))
     
     zip_filename = create_zip(pdf_files)
     
