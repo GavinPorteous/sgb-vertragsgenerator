@@ -10,7 +10,7 @@ app.secret_key = 'your_secret_key'  # Setze ein Geheimnis für die Sitzungsverwa
 # Directory and file paths
 TEMPLATE_DIR = "document_templates/"
 OUTPUT_DIR = "output/"
-EXCEL_TEMPLATE_PATH = os.path.join(TEMPLATE_DIR, "data_template.xlsx")
+EXCEL_TEMPLATE_PATH = os.path.join("excel_template", "data_template.xlsx")  # Updated path for Excel template
 
 # Helper function to create output directory
 def create_output_directory():
